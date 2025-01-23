@@ -10,19 +10,20 @@ import {
 } from '@nestjs/common';
 import { CreateTaskDto, UpdateTaskDto } from './entity/tasks.dto';
 import { TasksService } from './tasks.service';
+import { ITask } from './entity/tasks.model';
 
 @Controller('tasks')
 export class TasksController {
   constructor(private readonly tasksService: TasksService) {}
 
   @Get()
-  public getAll() {
+  public getAll(): ITask[] {
     return this.tasksService.getAll();
   }
 
   @Get('/:id')
-  public getOneById(@Param('id') id: string) {
-    const task = this.tasksService.getOneById(id);
+  public getById(@Param('id') id: string): ITask {
+    const task = this.tasksService.getById(id);
     if (!task) {
       throw new NotFoundException('Task not found.');
     }
@@ -31,13 +32,16 @@ export class TasksController {
   }
 
   @Post()
-  public create(@Body() body: CreateTaskDto) {
+  public create(@Body() body: CreateTaskDto): ITask {
     return this.tasksService.create(body);
   }
 
   @Patch('/:id')
-  public updateById(@Param('id') id: string, @Body() body: UpdateTaskDto) {
-    const task = this.tasksService.getOneById(id);
+  public updateById(
+    @Param('id') id: string,
+    @Body() body: UpdateTaskDto,
+  ): ITask {
+    const task = this.tasksService.getById(id);
     if (!task) {
       throw new NotFoundException('Task not found.');
     }
@@ -46,8 +50,8 @@ export class TasksController {
   }
 
   @Delete('/:id')
-  public deleteById(@Param('id') id: string) {
-    const task = this.tasksService.getOneById(id);
+  public deleteById(@Param('id') id: string): string {
+    const task = this.tasksService.getById(id);
     if (!task) {
       throw new NotFoundException('Task not found.');
     }

@@ -7,11 +7,11 @@ import { ITask } from './entity/tasks.model';
 export class TasksService {
   private tasks: ITask[] = [];
 
-  public getAll() {
+  public getAll(): ITask[] {
     return this.tasks;
   }
 
-  public getOneById(id: string) {
+  public getById(id: string): ITask | undefined {
     return this.tasks.find((t) => t.id === id);
   }
 
@@ -25,7 +25,7 @@ export class TasksService {
     return task;
   }
 
-  public updateById(id: string, data: UpdateTaskDto) {
+  public updateById(id: string, data: UpdateTaskDto): ITask {
     const taskIndex = this.tasks.findIndex((t) => t.id === id);
     const updatedTask = { ...this.tasks[taskIndex], ...data };
 
@@ -34,7 +34,9 @@ export class TasksService {
     return updatedTask;
   }
 
-  public deleteById(id: string) {
-    return this.tasks.filter((t) => t.id !== id);
+  public deleteById(id: string): string {
+    this.tasks = this.tasks.filter((t) => t.id !== id);
+
+    return 'Task has been deleted.';
   }
 }
