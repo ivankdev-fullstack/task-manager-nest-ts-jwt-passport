@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { randomUUID } from 'crypto';
-import { CreateTaskDto } from './entity/tasks.dto';
+import { CreateTaskDto, UpdateTaskDto } from './entity/tasks.dto';
 import { ITask } from './entity/tasks.model';
 
 @Injectable()
@@ -13,6 +13,15 @@ export class TasksService {
 
   public getOneById(id: string) {
     return this.tasks.find((t) => t.id === id);
+  }
+
+  public updateOneById(id: string, data: UpdateTaskDto) {
+    const taskIndex = this.tasks.findIndex((t) => t.id === id);
+    const updatedTask = { ...this.tasks[taskIndex], ...data };
+
+    this.tasks[taskIndex] = updatedTask;
+
+    return updatedTask;
   }
 
   public create(data: CreateTaskDto): ITask {
