@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   NotFoundException,
   Param,
@@ -29,20 +30,28 @@ export class TasksController {
     return task;
   }
 
+  @Post()
+  public create(@Body() body: CreateTaskDto) {
+    return this.tasksService.create(body);
+  }
+
   @Patch('/:id')
-  public updateOneById(@Param('id') id: string, @Body() body: UpdateTaskDto) {
+  public updateById(@Param('id') id: string, @Body() body: UpdateTaskDto) {
     const task = this.tasksService.getOneById(id);
     if (!task) {
       throw new NotFoundException('Task not found.');
     }
 
-    console.log(body);
-
-    return this.tasksService.updateOneById(id, body);
+    return this.tasksService.updateById(id, body);
   }
 
-  @Post()
-  public create(@Body() body: CreateTaskDto) {
-    return this.tasksService.create(body);
+  @Delete('/:id')
+  public deleteById(@Param('id') id: string) {
+    const task = this.tasksService.getOneById(id);
+    if (!task) {
+      throw new NotFoundException('Task not found.');
+    }
+
+    return this.tasksService.deleteById(id);
   }
 }
