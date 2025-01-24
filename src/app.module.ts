@@ -4,12 +4,13 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { appConfig } from './config/app.config';
 import { appConfigSchema } from './config/config.types';
+import { typeOrmConfig } from './config/database.config';
 import { TasksModule } from './tasks/tasks.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
-      load: [appConfig],
+      load: [appConfig, typeOrmConfig],
       validationSchema: appConfigSchema,
       validationOptions: {
         abortEarly: true,
