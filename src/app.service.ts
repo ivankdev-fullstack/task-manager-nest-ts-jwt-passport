@@ -6,7 +6,7 @@ import { TypedConfigService } from './config/typed-config.service';
 export class AppService {
   constructor(private readonly configService: TypedConfigService) {}
 
-  public test() {
+  public async test() {
     console.log(this.configService.get<AppConfig>('app')?.messagePrefix);
   }
 }

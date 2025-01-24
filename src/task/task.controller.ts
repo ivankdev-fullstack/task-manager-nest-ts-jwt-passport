@@ -3,13 +3,12 @@ import {
   Controller,
   Delete,
   Get,
-  NotFoundException,
   Param,
   Patch,
   Post,
 } from '@nestjs/common';
 import { CreateTaskDto, UpdateTaskDto } from './entity/task.dto';
-import { ITask } from './entity/task.types';
+import { Task } from './entity/task.entity';
 import { TaskService } from './task.service';
 
 @Controller('tasks')
@@ -17,45 +16,30 @@ export class TaskController {
   constructor(private readonly tasksService: TaskService) {}
 
   @Get()
-  public getAll(): ITask[] {
+  public async getAll(): Promise<Task[]> {
     return this.tasksService.getAll();
   }
 
   @Get('/:id')
-  public getById(@Param('id') id: string): ITask {
-    const task = this.tasksService.getById(id);
-    if (!task) {
-      throw new NotFoundException('Task not found.');
-    }
-
-    return task;
+  public async getById(@Param('id') id: string): Promise<Task> {
+    return this.tasksService.getById(id);
   }
 
   @Post()
-  public create(@Body() body: CreateTaskDto): ITask {
+  public async create(@Body() body: CreateTaskDto): Promise<Task> {
     return this.tasksService.create(body);
   }
 
   @Patch('/:id')
-  public updateById(
+  public async updateById(
     @Param('id') id: string,
     @Body() body: UpdateTaskDto,
-  ): ITask {
-    const task = this.tasksService.getById(id);
-    if (!task) {
-      throw new NotFoundException('Task not found.');
-    }
-
+  ): Promise<Task> {
     return this.tasksService.updateById(id, body);
   }
 
   @Delete('/:id')
-  public deleteById(@Param('id') id: string): string {
-    const task = this.tasksService.getById(id);
-    if (!task) {
-      throw new NotFoundException('Task not found.');
-    }
-
+  public async deleteById(@Param('id') id: string): Promise<Task> {
     return this.tasksService.deleteById(id);
   }
 }
