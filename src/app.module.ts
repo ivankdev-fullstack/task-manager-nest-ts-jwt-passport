@@ -4,8 +4,9 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { appConfig } from './config/app.config';
-import { appConfigSchema, ConfigType } from './config/config.types';
+import { appConfigSchema } from './config/config.types';
 import { typeOrmConfig } from './config/database.config';
+import { TypedConfigService } from './config/typed-config.service';
 import { TasksModule } from './tasks/tasks.module';
 
 @Module({
@@ -13,7 +14,7 @@ import { TasksModule } from './tasks/tasks.module';
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
-      useFactory: (configSecvice: ConfigService<ConfigType>) => ({
+      useFactory: (configSecvice: TypedConfigService) => ({
         ...configSecvice.get('database'),
       }),
     }),
@@ -27,6 +28,9 @@ import { TasksModule } from './tasks/tasks.module';
     TasksModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    AppService,
+    { provide: TypedConfigService, useExisting: ConfigService },
+  ],
 })
 export class AppModule {}
