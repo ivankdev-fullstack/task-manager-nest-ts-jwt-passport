@@ -8,13 +8,13 @@ import {
   Patch,
   Post,
 } from '@nestjs/common';
-import { CreateTaskDto, UpdateTaskDto } from './entity/tasks.dto';
-import { TasksService } from './tasks.service';
-import { ITask } from './entity/tasks.model';
+import { CreateTaskDto, UpdateTaskDto } from './entity/task.dto';
+import { ITask } from './entity/task.types';
+import { TaskService } from './task.service';
 
 @Controller('tasks')
-export class TasksController {
-  constructor(private readonly tasksService: TasksService) {}
+export class TaskController {
+  constructor(private readonly tasksService: TaskService) {}
 
   @Get()
   public getAll(): ITask[] {

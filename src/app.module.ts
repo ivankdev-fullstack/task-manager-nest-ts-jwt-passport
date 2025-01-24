@@ -7,7 +7,8 @@ import { appConfig } from './config/app.config';
 import { appConfigSchema } from './config/config.types';
 import { typeOrmConfig } from './config/database.config';
 import { TypedConfigService } from './config/typed-config.service';
-import { TasksModule } from './tasks/tasks.module';
+import { Task } from './task/entity/task.entity';
+import { TaskModule } from './task/task.module';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { TasksModule } from './tasks/tasks.module';
       inject: [ConfigService],
       useFactory: (configSecvice: TypedConfigService) => ({
         ...configSecvice.get('database'),
+        entities: [Task],
       }),
     }),
     ConfigModule.forRoot({
@@ -25,7 +27,7 @@ import { TasksModule } from './tasks/tasks.module';
         abortEarly: true,
       },
     }),
-    TasksModule,
+    TaskModule,
   ],
   controllers: [AppController],
   providers: [

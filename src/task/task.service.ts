@@ -1,10 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { randomUUID } from 'crypto';
-import { CreateTaskDto, UpdateTaskDto } from './entity/tasks.dto';
-import { ITask } from './entity/tasks.model';
+import { CreateTaskDto, UpdateTaskDto } from './entity/task.dto';
+import { ITask } from './entity/task.types';
 
 @Injectable()
-export class TasksService {
+export class TaskService {
   private tasks: ITask[] = [];
 
   public getAll(): ITask[] {
