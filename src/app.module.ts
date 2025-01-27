@@ -9,6 +9,8 @@ import { typeOrmConfig } from './config/database.config';
 import { TypedConfigService } from './config/typed-config.service';
 import { Task } from './task/entity/task.entity';
 import { TaskModule } from './task/task.module';
+import { User } from './user/entity/user.entity';
+import { UserModule } from './user/user.module';
 
 @Module({
   imports: [
@@ -17,7 +19,7 @@ import { TaskModule } from './task/task.module';
       inject: [ConfigService],
       useFactory: (configSecvice: TypedConfigService) => ({
         ...configSecvice.get('database'),
-        entities: [Task],
+        entities: [Task, User],
       }),
     }),
     ConfigModule.forRoot({
@@ -28,6 +30,7 @@ import { TaskModule } from './task/task.module';
       },
     }),
     TaskModule,
+    UserModule,
   ],
   controllers: [AppController],
   providers: [
