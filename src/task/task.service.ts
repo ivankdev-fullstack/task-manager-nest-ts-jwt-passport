@@ -5,7 +5,7 @@ import { getUniqueLabelNames } from 'src/utils/utils';
 import { Repository } from 'typeorm';
 import { CreateTaskDto, UpdateTaskDto } from './entity/task.dto';
 import { Task } from './entity/task.entity';
-import { GetTasksParams } from './entity/task.params';
+import { GetTasksParams, PaginationParams } from './entity/task.params';
 
 @Injectable()
 export class TaskService {
@@ -14,12 +14,17 @@ export class TaskService {
     private readonly taskRepository: Repository<Task>,
   ) {}
 
-  public async getAll(filters?: GetTasksParams): Promise<Task[]> {
-    return this.taskRepository.find({
+  public async getAll(
+    filters?: GetTasksParams,
+    pagination?: PaginationParams,
+  ): Promise<[Task[], number]> {
+    return this.taskRepository.findAndCount({
       where: {
         status: filters?.status,
       },
       relations: ['labels'],
+      skip: pagination?.offset,
+      take: pagination?.limit,
     });
   }
 

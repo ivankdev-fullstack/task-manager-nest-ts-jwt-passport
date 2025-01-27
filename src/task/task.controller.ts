@@ -10,16 +10,31 @@ import {
 } from '@nestjs/common';
 import { CreateTaskDto, UpdateTaskDto } from './entity/task.dto';
 import { Task } from './entity/task.entity';
+import {
+  GetTasksParams,
+  PaginationParams,
+  PaginationResponse,
+} from './entity/task.params';
 import { TaskService } from './task.service';
-import { GetTasksParams } from './entity/task.params';
 
 @Controller('tasks')
 export class TaskController {
   constructor(private readonly tasksService: TaskService) {}
 
   @Get()
-  public async getAll(@Query() filters: GetTasksParams): Promise<Task[]> {
-    return this.tasksService.getAll(filters);
+  public async getAll(
+    @Query() filters: GetTasksParams,
+    @Query() pagination: PaginationParams,
+  ): Promise<PaginationResponse<Task>> {
+    const [items, total] = await this.tasksService.getAll(filters, pagination);
+
+    return {
+      data: items,
+      meta: {
+        total,
+        ...pagination,
+      },
+    };
   }
 
   @Get('/:id')
