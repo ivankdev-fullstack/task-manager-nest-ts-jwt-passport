@@ -1,12 +1,12 @@
 import { registerAs } from '@nestjs/config';
 
 export interface AppConfig {
-  messagePrefix: string;
+  PORT: number;
 }
 
 export const appConfig = registerAs(
   'app',
   (): AppConfig => ({
-    messagePrefix: process.env.APP_MESSAGE_PREFIX ?? 'Hello ',
+    PORT: parseInt(process.env.PORT as string) ?? 3000,
   }),
 );
