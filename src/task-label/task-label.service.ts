@@ -15,7 +15,7 @@ export class TaskLabelService {
     private readonly taskService: TaskService,
   ) {}
 
-  public async addLabelsToTask(
+  public async addToTask(
     taskId: string,
     data: CreateTaskLabelDto[],
   ): Promise<Task> {
@@ -25,6 +25,19 @@ export class TaskLabelService {
     );
 
     task.labels = [...task.labels, ...uniqueLabels];
+
+    return await this.taskService.updateById(taskId, task);
+  }
+
+  public async removeByTaskId(
+    taskId: string,
+    labelNames: string[],
+  ): Promise<Task> {
+    const task = await this.taskService.getById(taskId);
+
+    task.labels = task.labels.filter(
+      (label) => !labelNames.includes(label.name),
+    );
 
     return await this.taskService.updateById(taskId, task);
   }

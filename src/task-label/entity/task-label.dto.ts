@@ -6,3 +6,10 @@ export class CreateTaskLabelDto {
   @MaxLength(20)
   name: string;
 }
+
+export class DeleteTaskLabelDto {
+  @IsString()
+  @IsNotEmpty()
+  @MaxLength(20)
+  name: string;
+}

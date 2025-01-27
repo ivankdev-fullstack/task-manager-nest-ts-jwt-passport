@@ -45,4 +45,9 @@ export class UpdateTaskDto {
   @IsEnum(TaskStatus)
   @IsOptional()
   status?: TaskStatus;
+
+  @IsOptional()
+  @ValidateNested({ each: true })
+  @Type(() => CreateTaskLabelDto)
+  labels?: CreateTaskLabelDto[];
 }
