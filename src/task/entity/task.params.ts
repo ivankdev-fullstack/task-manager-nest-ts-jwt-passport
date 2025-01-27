@@ -1,4 +1,4 @@
-import { Type } from 'class-transformer';
+import { Transform, Type } from 'class-transformer';
 import { IsEnum, IsInt, IsOptional, Max, Min } from 'class-validator';
 import { TaskStatus } from './task.types';
 
@@ -8,8 +8,18 @@ export class GetTasksParams {
   status?: TaskStatus;
 
   @IsOptional()
-  @IsEnum(TaskStatus)
   search?: string;
+
+  @IsOptional()
+  @Transform(({ value }: { value?: string }) => {
+    if (!value) return undefined;
+
+    return value
+      .split(',')
+      .map((label) => label.trim())
+      .filter((label) => label.length);
+  })
+  labels?: string[];
 }
 
 export class PaginationParams {
