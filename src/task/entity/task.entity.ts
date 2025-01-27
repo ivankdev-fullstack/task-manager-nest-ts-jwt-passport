@@ -8,7 +8,7 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { TaskLabel } from './task-label.entity';
+import { TaskLabel } from '../../task-label/entity/task-label.entity';
 import { TaskStatus } from './task.types';
 
 @Entity('tasks')

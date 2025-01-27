@@ -7,7 +7,7 @@ import {
   IsUUID,
   ValidateNested,
 } from 'class-validator';
-import { CreateTaskLabelDto } from './task-label.dto';
+import { CreateTaskLabelDto } from '../../task-label/entity/task-label.dto';
 import { TaskStatus } from './task.types';
 
 export class CreateTaskDto {

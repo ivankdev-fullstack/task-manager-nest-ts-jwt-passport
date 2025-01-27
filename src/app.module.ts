@@ -7,7 +7,8 @@ import { appConfig } from './config/app.config';
 import { appConfigSchema } from './config/config.types';
 import { typeOrmConfig } from './config/database.config';
 import { TypedConfigService } from './config/typed-config.service';
-import { TaskLabel } from './task/entity/task-label.entity';
+import { TaskLabel } from './task-label/entity/task-label.entity';
+import { TaskLabelModule } from './task-label/task-label.module';
 import { Task } from './task/entity/task.entity';
 import { TaskModule } from './task/task.module';
 import { User } from './user/entity/user.entity';
@@ -32,6 +33,7 @@ import { UserModule } from './user/user.module';
     }),
     TaskModule,
     UserModule,
+    TaskLabelModule,
   ],
   controllers: [AppController],
   providers: [
