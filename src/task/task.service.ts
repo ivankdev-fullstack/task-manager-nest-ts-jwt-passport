@@ -2,7 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { randomUUID } from 'crypto';
 import { getUniqueLabelNames } from 'src/utils/utils';
-import { FindOptionsWhere, Like, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 import { CreateTaskDto, UpdateTaskDto } from './entity/task.dto';
 import { Task } from './entity/task.entity';
 import { GetTasksParams, PaginationParams } from './entity/task.params';
@@ -18,23 +18,23 @@ export class TaskService {
     filters?: GetTasksParams,
     pagination?: PaginationParams,
   ): Promise<[Task[], number]> {
-    const where: FindOptionsWhere<Task> = {};
+    const query = this.taskRepository
+      .createQueryBuilder('task')
+      .leftJoinAndSelect('task.labels', 'labels');
 
     if (filters?.status) {
-      where.status = filters.status;
+      query.andWhere('task.status = :status', { status: filters.status });
     }
 
     if (filters?.search?.trim()) {
-      where.title = Like(`%${filters.search}%`);
-      where.description = Like(`%${filters.search}%`);
+      query.andWhere(
+        '(task.title ILIKE :search OR task.description ILIKE :search)',
+        { search: `%${filters.search}%` },
+      );
     }
 
-    return this.taskRepository.findAndCount({
-      where,
-      relations: ['labels'],
-      skip: pagination?.offset,
-      take: pagination?.limit,
-    });
+    query.skip(pagination?.offset).take(pagination?.limit);
+    return query.getManyAndCount();
   }
 
   public async getById(id: string): Promise<Task> {
