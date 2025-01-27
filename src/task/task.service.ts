@@ -2,7 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { randomUUID } from 'crypto';
 import { getUniqueLabelNames } from 'src/utils/utils';
-import { Repository } from 'typeorm';
+import { FindOptionsWhere, Like, Repository } from 'typeorm';
 import { CreateTaskDto, UpdateTaskDto } from './entity/task.dto';
 import { Task } from './entity/task.entity';
 import { GetTasksParams, PaginationParams } from './entity/task.params';
@@ -18,10 +18,19 @@ export class TaskService {
     filters?: GetTasksParams,
     pagination?: PaginationParams,
   ): Promise<[Task[], number]> {
+    const where: FindOptionsWhere<Task> = {};
+
+    if (filters?.status) {
+      where.status = filters.status;
+    }
+
+    if (filters?.search?.trim()) {
+      where.title = Like(`%${filters.search}%`);
+      where.description = Like(`%${filters.search}%`);
+    }
+
     return this.taskRepository.findAndCount({
-      where: {
-        status: filters?.status,
-      },
+      where,
       relations: ['labels'],
       skip: pagination?.offset,
       take: pagination?.limit,

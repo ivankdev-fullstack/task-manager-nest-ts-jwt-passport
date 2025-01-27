@@ -6,6 +6,10 @@ export class GetTasksParams {
   @IsOptional()
   @IsEnum(TaskStatus)
   status?: TaskStatus;
+
+  @IsOptional()
+  @IsEnum(TaskStatus)
+  search?: string;
 }
 
 export class PaginationParams {
