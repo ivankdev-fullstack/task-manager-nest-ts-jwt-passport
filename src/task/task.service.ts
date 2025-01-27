@@ -5,7 +5,11 @@ import { getUniqueLabelNames } from 'src/utils/utils';
 import { Repository } from 'typeorm';
 import { CreateTaskDto, UpdateTaskDto } from './entity/task.dto';
 import { Task } from './entity/task.entity';
-import { GetTasksParams, PaginationParams } from './entity/task.params';
+import {
+  PaginationParams,
+  TasksFilterParams,
+  TasksSortParams,
+} from './entity/task.params';
 
 @Injectable()
 export class TaskService {
@@ -15,8 +19,9 @@ export class TaskService {
   ) {}
 
   public async getAll(
-    filters?: GetTasksParams,
+    filters?: TasksFilterParams,
     pagination?: PaginationParams,
+    sort?: TasksSortParams,
   ): Promise<[Task[], number]> {
     const query = this.taskRepository
       .createQueryBuilder('task')
@@ -35,7 +40,7 @@ export class TaskService {
       query.andWhere('labels.name IN (:...names)', { names: filters.labels });
     }
 
-    query.orderBy(`task.${filters?.sortBy}`, filters?.sortOrder);
+    query.orderBy(`task.${sort?.sortBy}`, sort?.sortOrder);
     query.skip(pagination?.offset).take(pagination?.limit);
     return query.getManyAndCount();
   }

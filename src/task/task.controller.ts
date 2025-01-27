@@ -11,9 +11,10 @@ import {
 import { CreateTaskDto, UpdateTaskDto } from './entity/task.dto';
 import { Task } from './entity/task.entity';
 import {
-  GetTasksParams,
   PaginationParams,
   PaginationResponse,
+  TasksFilterParams,
+  TasksSortParams,
 } from './entity/task.params';
 import { TaskService } from './task.service';
 
@@ -23,10 +24,15 @@ export class TaskController {
 
   @Get()
   public async getAll(
-    @Query() filters: GetTasksParams,
+    @Query() filters: TasksFilterParams,
     @Query() pagination: PaginationParams,
+    @Query() sort: TasksSortParams,
   ): Promise<PaginationResponse<Task>> {
-    const [items, total] = await this.tasksService.getAll(filters, pagination);
+    const [items, total] = await this.tasksService.getAll(
+      filters,
+      pagination,
+      sort,
+    );
 
     return {
       data: items,

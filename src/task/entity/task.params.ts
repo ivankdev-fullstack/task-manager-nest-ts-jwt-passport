@@ -2,7 +2,7 @@ import { Transform, Type } from 'class-transformer';
 import { IsEnum, IsIn, IsInt, IsOptional, Max, Min } from 'class-validator';
 import { TaskStatus } from './task.types';
 
-export class GetTasksParams {
+export class TasksFilterParams {
   @IsOptional()
   @IsEnum(TaskStatus)
   status?: TaskStatus;
@@ -20,7 +20,9 @@ export class GetTasksParams {
       .filter((label) => label.length);
   })
   labels?: string[];
+}
 
+export class TasksSortParams {
   @IsOptional()
   @IsIn(['createdAt', 'title', 'status'])
   sortBy?: string = 'createdAt';
