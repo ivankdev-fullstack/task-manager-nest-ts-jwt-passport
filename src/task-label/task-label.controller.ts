@@ -1,9 +1,6 @@
 import { Body, Controller, Delete, Param, Post } from '@nestjs/common';
 import { Task } from 'src/task/entity/task.entity';
-import {
-  CreateTaskLabelDto,
-  DeleteTaskLabelDto,
-} from './entity/task-label.dto';
+import { CreateTaskLabelDto } from './entity/task-label.dto';
 import { TaskLabelService } from './task-label.service';
 
 @Controller('labels')

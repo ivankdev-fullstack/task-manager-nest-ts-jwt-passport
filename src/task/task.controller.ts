@@ -6,18 +6,20 @@ import {
   Param,
   Patch,
   Post,
+  Query,
 } from '@nestjs/common';
 import { CreateTaskDto, UpdateTaskDto } from './entity/task.dto';
 import { Task } from './entity/task.entity';
 import { TaskService } from './task.service';
+import { GetTasksParams } from './entity/task.params';
 
 @Controller('tasks')
 export class TaskController {
   constructor(private readonly tasksService: TaskService) {}
 
   @Get()
-  public async getAll(): Promise<Task[]> {
-    return this.tasksService.getAll();
+  public async getAll(@Query() filters: GetTasksParams): Promise<Task[]> {
+    return this.tasksService.getAll(filters);
   }
 
   @Get('/:id')
