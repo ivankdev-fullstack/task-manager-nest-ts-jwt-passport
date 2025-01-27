@@ -1,4 +1,10 @@
-import { IsEnum, IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import {
+  IsEnum,
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+  IsUUID,
+} from 'class-validator';
 import { TaskStatus } from './task.types';
 
 export class CreateTaskDto {
@@ -13,6 +19,10 @@ export class CreateTaskDto {
   @IsEnum(TaskStatus)
   @IsNotEmpty()
   status: TaskStatus;
+
+  @IsNotEmpty()
+  @IsUUID()
+  userId: string;
 }
 
 export class UpdateTaskDto {
