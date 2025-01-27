@@ -7,6 +7,7 @@ import { appConfig } from './config/app.config';
 import { appConfigSchema } from './config/config.types';
 import { typeOrmConfig } from './config/database.config';
 import { TypedConfigService } from './config/typed-config.service';
+import { TaskLabel } from './task/entity/task-label.entity';
 import { Task } from './task/entity/task.entity';
 import { TaskModule } from './task/task.module';
 import { User } from './user/entity/user.entity';
@@ -19,7 +20,7 @@ import { UserModule } from './user/user.module';
       inject: [ConfigService],
       useFactory: (configSecvice: TypedConfigService) => ({
         ...configSecvice.get('database'),
-        entities: [Task, User],
+        entities: [Task, User, TaskLabel],
       }),
     }),
     ConfigModule.forRoot({
