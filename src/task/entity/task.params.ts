@@ -1,5 +1,5 @@
 import { Transform, Type } from 'class-transformer';
-import { IsEnum, IsInt, IsOptional, Max, Min } from 'class-validator';
+import { IsEnum, IsIn, IsInt, IsOptional, Max, Min } from 'class-validator';
 import { TaskStatus } from './task.types';
 
 export class GetTasksParams {
@@ -20,6 +20,14 @@ export class GetTasksParams {
       .filter((label) => label.length);
   })
   labels?: string[];
+
+  @IsOptional()
+  @IsIn(['createdAt', 'title', 'status'])
+  sortBy?: string = 'createdAt';
+
+  @IsOptional()
+  @IsEnum(['ASC', 'DESC'])
+  sortOrder?: 'ASC' | 'DESC' = 'DESC';
 }
 
 export class PaginationParams {
