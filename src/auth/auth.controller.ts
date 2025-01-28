@@ -9,13 +9,15 @@ import {
   SerializeOptions,
   UseInterceptors,
 } from '@nestjs/common';
+import { Public } from 'src/user/decorators/public.decorator';
+import { Roles } from 'src/user/decorators/roles.decorator';
 import { CreateUserDto } from 'src/user/entity/user.dto';
 import { User } from 'src/user/entity/user.entity';
+import { AdminResponse, UserRole } from 'src/user/entity/user.types';
 import { UserService } from 'src/user/user.service';
 import { AuthService } from './auth.service';
 import { LoginDto } from './entity/login.dto';
 import { AuthRequest, LoginResponse } from './entity/login.types';
-import { Public } from 'src/user/decorators/public.decorator';
 
 @Controller('auth')
 @UseInterceptors(ClassSerializerInterceptor)
@@ -34,6 +36,12 @@ export class AuthController {
     }
 
     return user;
+  }
+
+  @Get('admin')
+  @Roles(UserRole.ADMIN)
+  async adminOnly(): Promise<AdminResponse> {
+    return new AdminResponse({ message: 'This is for admins only!' });
   }
 
   @Post('register')
