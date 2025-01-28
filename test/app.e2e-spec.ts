@@ -1,25 +1,37 @@
-import { Test, TestingModule } from '@nestjs/testing';
-import { INestApplication } from '@nestjs/common';
+import { TestSetup } from 'src/test/utils/test.setup';
 import * as request from 'supertest';
-import { App } from 'supertest/types';
 import { AppModule } from './../src/app.module';
 
 describe('AppController (e2e)', () => {
-  let app: INestApplication<App>;
+  let testSetup: TestSetup;
 
   beforeEach(async () => {
-    const moduleFixture: TestingModule = await Test.createTestingModule({
-      imports: [AppModule],
-    }).compile();
-
-    app = moduleFixture.createNestApplication();
-    await app.init();
+    testSetup = await TestSetup.create(AppModule);
   });
 
-  it('/ (GET)', () => {
-    return request(app.getHttpServer())
-      .get('/')
-      .expect(200)
-      .expect('Hello World!');
+  afterEach(async () => {
+    await testSetup.cleanup();
+  });
+
+  afterAll(async () => {
+    await testSetup.teardown();
+  });
+
+  const testUser = {
+    email: 'test@example.com',
+    password: 'Password123!',
+    name: 'Test User',
+  };
+
+  it('/auth/register (POST)', () => {
+    return request(testSetup.app.getHttpServer())
+      .post('/auth/register')
+      .send(testUser)
+      .expect(201)
+      .expect((res) => {
+        expect(res.body.email).toBe(testUser.email);
+        expect(res.body.name).toBe(testUser.name);
+        expect(res.body).not.toHaveProperty('password');
+      });
   });
 });
