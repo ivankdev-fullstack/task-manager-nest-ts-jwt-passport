@@ -23,13 +23,15 @@ export class TaskService {
   ) {}
 
   public async getAll(
+    userId: string,
     filters?: TasksFilterParams,
     pagination?: PaginationParams,
     sort?: TasksSortParams,
   ): Promise<[Task[], number]> {
     const query = this.taskRepository
       .createQueryBuilder('task')
-      .leftJoinAndSelect('task.labels', 'labels');
+      .leftJoinAndSelect('task.labels', 'labels')
+      .where('task.userId = :userId', { userId });
 
     if (filters?.status) {
       query.andWhere('task.status = :status', { status: filters.status });
@@ -49,7 +51,7 @@ export class TaskService {
     return query.getManyAndCount();
   }
 
-  public async getById(id: string, userId?: string): Promise<Task> {
+  public async getById(id: string, userId: string): Promise<Task> {
     const task = await this.taskRepository.findOne({
       where: { id },
       relations: ['labels'],
@@ -58,10 +60,8 @@ export class TaskService {
     if (!task) {
       throw new NotFoundException('Task not found.');
     }
-    if (userId) {
-      this.checkTaskOwnership(task, userId);
-    }
 
+    this.checkTaskOwnership(task, userId);
     return task;
   }
 

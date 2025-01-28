@@ -25,11 +25,13 @@ export class TaskController {
 
   @Get()
   public async getAll(
+    @CurrentUserId() userId: string,
     @Query() filters: TasksFilterParams,
     @Query() pagination: PaginationParams,
     @Query() sort: TasksSortParams,
   ): Promise<PaginationResponse<Task>> {
     const [items, total] = await this.tasksService.getAll(
+      userId,
       filters,
       pagination,
       sort,
