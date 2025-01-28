@@ -9,6 +9,7 @@ import { AuthConfig } from './../config/auth.config';
 import { TypedConfigService } from './../config/typed-config.service';
 import { User } from './entity/user.entity';
 import { UserService } from './user.service';
+import { APP_GUARD } from '@nestjs/core';
 
 @Module({
   imports: [
@@ -24,7 +25,15 @@ import { UserService } from './user.service';
       }),
     }),
   ],
-  providers: [UserService, AuthService, AuthGuard],
+  providers: [
+    UserService,
+    AuthService,
+    AuthGuard,
+    {
+      provide: APP_GUARD,
+      useClass: AuthGuard,
+    },
+  ],
   controllers: [AuthController],
 })
 export class UserModule {}

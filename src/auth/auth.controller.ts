@@ -7,7 +7,6 @@ import {
   Post,
   Request,
   SerializeOptions,
-  UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
 import { CreateUserDto } from 'src/user/entity/user.dto';
@@ -16,7 +15,6 @@ import { UserService } from 'src/user/user.service';
 import { AuthService } from './auth.service';
 import { LoginDto } from './entity/login.dto';
 import { AuthRequest, LoginResponse } from './entity/login.types';
-import { AuthGuard } from './auth.guard';
 
 @Controller('auth')
 @UseInterceptors(ClassSerializerInterceptor)
@@ -27,7 +25,6 @@ export class AuthController {
     private readonly userService: UserService,
   ) {}
 
-  @UseGuards(AuthGuard)
   @Get('/profile')
   async profile(@Request() req: AuthRequest): Promise<User> {
     const user = await this.userService.getById(req.user.sub);
