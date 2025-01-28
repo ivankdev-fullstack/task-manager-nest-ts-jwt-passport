@@ -8,3 +8,10 @@ export class LoginResponse {
   @Expose()
   accessToken: string;
 }
+
+export interface AuthRequest {
+  user: {
+    sub: string;
+    name: string;
+  };
+}
