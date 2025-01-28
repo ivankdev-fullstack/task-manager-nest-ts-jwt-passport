@@ -144,4 +144,34 @@ describe('Authentication & Authorization (e2e)', () => {
         expect(res.body.message).toBe('This is for admins only!');
       });
   });
+
+  it('/auth/admin (GET) - regular user denied', async () => {
+    await request(testSetup.app.getHttpServer())
+      .post('/auth/register')
+      .send(testUser);
+
+    const response = await request(testSetup.app.getHttpServer())
+      .post('/auth/login')
+      .send({ email: testUser.email, password: testUser.password });
+    const token = response.body.accessToken;
+
+    return await request(testSetup.app.getHttpServer())
+      .get('/auth/admin')
+      .set('Authorization', `Bearer ${token}`)
+      .expect(403);
+  });
+
+  it('/auth/register (POST) - attempting to register as an admin', async () => {
+    const userAdmin = {
+      ...testUser,
+      roles: [UserRole.ADMIN],
+    };
+    await request(testSetup.app.getHttpServer())
+      .post('/auth/register')
+      .send(userAdmin)
+      .expect(201)
+      .expect((res) => {
+        expect(res.body.roles).toEqual([UserRole.USER]);
+      });
+  });
 });

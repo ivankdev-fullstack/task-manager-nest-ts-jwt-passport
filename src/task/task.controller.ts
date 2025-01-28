@@ -8,6 +8,7 @@ import {
   Post,
   Query,
 } from '@nestjs/common';
+import { CurrentUserId } from 'src/user/decorators/current-user-id.decorator';
 import { CreateTaskDto, UpdateTaskDto } from './entity/task.dto';
 import { Task } from './entity/task.entity';
 import {
@@ -49,8 +50,14 @@ export class TaskController {
   }
 
   @Post()
-  public async create(@Body() body: CreateTaskDto): Promise<Task> {
-    return this.tasksService.create(body);
+  public async create(
+    @Body() createTaskDto: CreateTaskDto,
+    @CurrentUserId() userId: string,
+  ): Promise<Task> {
+    return await this.tasksService.create({
+      ...createTaskDto,
+      userId,
+    });
   }
 
   @Patch('/:id')

@@ -4,7 +4,6 @@ import {
   IsNotEmpty,
   IsOptional,
   IsString,
-  IsUUID,
   ValidateNested,
 } from 'class-validator';
 import { CreateTaskLabelDto } from '../../task-label/entity/task-label.dto';
@@ -23,8 +22,6 @@ export class CreateTaskDto {
   @IsNotEmpty()
   status: TaskStatus;
 
-  @IsNotEmpty()
-  @IsUUID()
   userId: string;
 
   @IsOptional()
