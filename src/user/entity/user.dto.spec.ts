@@ -9,12 +9,13 @@ describe('CreateUserDto', () => {
     Object.assign(dto, {
       email: 'test@test.com',
       name: 'Piotr',
-      password: '123456',
+      password: '123456_C',
     });
   });
 
   it('should validate complete valid data', async () => {
     const errors = await validate(dto);
+    console.log(errors);
     expect(errors.length).toBe(0);
   });
 
