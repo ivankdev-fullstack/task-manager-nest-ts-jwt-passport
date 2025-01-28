@@ -41,6 +41,14 @@ describe('Tasks (e2e)', () => {
     taskId = response.body.id;
   });
 
+  afterEach(async () => {
+    await testSetup.cleanup();
+  });
+
+  afterAll(async () => {
+    await testSetup.teardown();
+  });
+
   it('should not allow access to other users tasks', async () => {
     const otherUser = { ...testUser, email: 'other@example.com' };
     await request(testSetup.app.getHttpServer())
@@ -88,13 +96,5 @@ describe('Tasks (e2e)', () => {
       .expect((res) => {
         expect(res.body.meta.total).toBe(0);
       });
-  });
-
-  afterEach(async () => {
-    await testSetup.cleanup();
-  });
-
-  afterAll(async () => {
-    await testSetup.teardown();
   });
 });

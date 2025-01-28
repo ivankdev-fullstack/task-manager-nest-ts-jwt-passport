@@ -15,7 +15,6 @@ describe('CreateUserDto', () => {
 
   it('should validate complete valid data', async () => {
     const errors = await validate(dto);
-    console.log(errors);
     expect(errors.length).toBe(0);
   });
 
