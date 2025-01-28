@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  ForbiddenException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { randomUUID } from 'crypto';
 import { getUniqueLabelNames } from 'src/utils/utils';
@@ -45,13 +49,17 @@ export class TaskService {
     return query.getManyAndCount();
   }
 
-  public async getById(id: string): Promise<Task> {
+  public async getById(id: string, userId?: string): Promise<Task> {
     const task = await this.taskRepository.findOne({
       where: { id },
       relations: ['labels'],
     });
+
     if (!task) {
       throw new NotFoundException('Task not found.');
+    }
+    if (userId) {
+      this.checkTaskOwnership(task, userId);
     }
 
     return task;
@@ -88,5 +96,11 @@ export class TaskService {
     }
 
     return this.taskRepository.remove(task);
+  }
+
+  private checkTaskOwnership(task: Task, userId: string): void {
+    if (task.userId !== userId) {
+      throw new ForbiddenException('You can only access your own tasks');
+    }
   }
 }
