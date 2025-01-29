@@ -44,7 +44,7 @@ JWT_EXPIRES_IN=60m
 Manage docker compose:
 
 ```bash
-docker compose up -D
+docker compose up -d
 ```
 
 Now, run the application:
@@ -52,3 +52,19 @@ Now, run the application:
 ```bash
 npm run start:dev
 ```
+
+## API Endpoints
+
+| Route            | Method | Description                 | Authentication    |
+|------------------|--------|-----------------------------|-------------------|
+| /auth/profile    | GET    | Get user profile info       | Yes               |
+| /auth/admin      | GET    | Get message for admins only | Yes (admins only) |
+| /auth/register   | POST   | Register a new user         | No                |
+| /auth/login      | POST   | Login existing user         | No                |
+| /tasks           | GET    | Get all user tasks          | Yes               |
+| /tasks/:id       | GET    | Get user task               | Yes               |
+| /tasks           | POST   | Create a new task           | Yes               |
+| /tasks/:id       | PATCH  | Update user task            | Yes               |
+| /tasks/:id       | DELETE | Delete user task            | Yes               |
+| /labels/:taskId  | POST   | Create task label           | Yes               |
+| /labels/:taskId  | DELETE | Delete task label           | Yes               |
